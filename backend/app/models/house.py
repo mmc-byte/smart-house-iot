@@ -12,3 +12,8 @@ class House(Base):
 
     # Relación con UserHouse (muchos-a-muchos con users)
     users_link = relationship("UserHouse", back_populates="house")
+    
+    # Relación con Rooms
+    rooms = relationship("Room", back_populates="house", cascade="all, delete")
+
+    # Usaremos 'link' solamente para muchos a muchos.

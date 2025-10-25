@@ -1,19 +1,23 @@
 -- ======= INITIAL STATE FOR THE POSTGRES DATABASE =========
 
--- But previously, create db and db user:
+-- 1. But previously, create db and db user - execute line by line in order:
 
 -- CREATE USER smarthome_admin WITH PASSWORD '123A';
 -- CREATE DATABASE smart_home OWNER smarthome_admin;
 -- GRANT CONNECT ON DATABASE smart_home TO smarthome_admin;
 -- GRANT CREATE, TEMPORARY ON DATABASE smart_home TO smarthome_admin;
 
--- Connect to database here
+-- 2. Then, connect to database smart_home and execute the following: 
+--   It's not necesary to execute line by line, it can be done in one go
 
 -- GRANT USAGE, CREATE ON SCHEMA public TO smarthome_admin;
 -- ALTER DEFAULT PRIVILEGES IN SCHEMA public
 -- GRANT ALL ON TABLES TO smarthome_admin;
 -- ALTER DEFAULT PRIVILEGES IN SCHEMA public
 -- GRANT ALL ON SEQUENCES TO smarthome_admin;
+
+-- 3. Done. Database and smarthome_admin created and priviliges granted. Now you can freely excute this script, assuming you're connected to the smart_home database.
+
 -- =====================================================
 -- TABLES
 -- =====================================================
@@ -25,7 +29,6 @@ DROP TABLE IF EXISTS user_houses CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS houses CASCADE;
-
 -- 1. HOUSES
 CREATE TABLE houses (
     id SERIAL PRIMARY KEY,
@@ -93,10 +96,61 @@ CREATE TABLE events (
 -- =====================================================
 -- INDEXES
 -- =====================================================
+
 CREATE INDEX idx_devices_room_id ON devices(room_id);
 CREATE INDEX idx_events_device_id ON events(device_id);
 CREATE INDEX idx_events_user_id ON events(user_id);
 CREATE INDEX idx_user_houses_user_id ON user_houses(user_id);
+
+-- =====================================================
+-- TRIGGERS
+-- =====================================================
+
+-- CREATE GLOBAL ROOM WHEN ADDING A NEW HOUSE : EVERY HOUSE HAS A ROOM GLOBAL
+	-- Function
+CREATE OR REPLACE FUNCTION create_global_room()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO rooms (house_id, name, description)
+    VALUES (NEW.id, 'global', 'Cuarto lógico para dispositivos globales');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+	-- Trigger
+CREATE TRIGGER trigger_create_global_room
+AFTER INSERT ON houses
+FOR EACH ROW
+EXECUTE FUNCTION create_global_room();
+
+-- =====================================================
+
+-- CREATE BOTH TOPICS AUTOMATICALLY WHEN INSERTING A NEW DEVICE : PUBLISH AND SUSCRIBE
+-- Function
+CREATE OR REPLACE FUNCTION set_device_topics()
+RETURNS TRIGGER AS $$
+DECLARE
+    house_id INT;
+    room_name TEXT;
+BEGIN
+    SELECT r.house_id, r.name INTO house_id, room_name
+    FROM rooms r WHERE r.id = NEW.room_id;
+
+    IF room_name = 'global' THEN
+        NEW.command_topic := format('houses/%s/%s/set', house_id, NEW.name);
+        NEW.state_topic := format('houses/%s/%s/state', house_id, NEW.name);
+    ELSE
+        NEW.command_topic := format('houses/%s/%s/%s/set', house_id, room_name, NEW.name);
+        NEW.state_topic := format('houses/%s/%s/%s/state', house_id, room_name, NEW.name);
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+-- Trigger
+CREATE TRIGGER trg_set_device_topics
+BEFORE INSERT ON devices
+FOR EACH ROW
+EXECUTE FUNCTION set_device_topics();
 
 -- =====================================================
 -- INSERT INITIAL DATA
@@ -119,7 +173,7 @@ VALUES ('Casita', 'Av. Del Futuro');
 
 INSERT INTO users (name, username, email, password_hash)
 VALUES (
-    'Admin Adminson',               
+    'Admin Cognito',               
     'mmc',                         -- username
     'mmc@home.com',                -- email
     crypt('123A', gen_salt('bf'))  -- hash
@@ -132,4 +186,6 @@ VALUES (
     1,  -- first house's id
     1   -- owner role's id in table roles
 );
+
+-- SIMPLE QUERY FOR TESTING
 select * from houses;

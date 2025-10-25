@@ -71,11 +71,9 @@ def read_user_me(
         .filter(User.id == current_user.id)
         .first()
     )
-    print("🟩🟩🟩🟥")
     print([ (uh.id, uh.role.name if uh.role else None) for uh in user.houses_link ])
     return user
 
-# SQLAlchemy moderno (2.0+)
-
+# SQLAlchemy 2.0+
 # Ya no acepta strings en los loader options (joinedload, selectinload, etc.).
 # Debes usar atributos de clase directamente.
