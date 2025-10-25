@@ -6,45 +6,49 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonRouterOutlet,
 } from "@ionic/react";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/authStore";
 import { useHistory } from "react-router";
 
-export const LoginPage = () => {
-  const { loginUser, loading, isAuthenticated } = useAuth();
+const LoginPage = () => {
+  const { login, initializing, isAuthenticated } = useAuthStore();
   const [tab, setTab] = useState<"username" | "email">("username");
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const history = useHistory();
 
   const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.detail.value });
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      await loginUser({
+      await login({
         username: tab === "username" ? form.username : undefined,
         email: tab === "email" ? form.email : undefined,
         password: form.password,
       });
-      history.push("/home");
+      console.log("Login exitoso");
+      history.push("/dashboard");
     } catch (err) {
+      console.error("Error en login:", err);
       alert("Credenciales incorrectas o error de conexión");
     }
   };
 
+  // Redirige si ya está autenticado
+  if (isAuthenticated) {
+    history.replace("/dashboard");
+    return null;
+  }
+
   return (
     <IonPage>
-      <IonContent className="ion-padding">
+   
         <h2>Iniciar sesión</h2>
 
-        {/* Tabs de login */}
+        {/*  Tabs simples */}
         <div className="flex justify-center gap-3 mb-4">
           <IonButton
             fill={tab === "username" ? "solid" : "outline"}
@@ -60,6 +64,7 @@ export const LoginPage = () => {
           </IonButton>
         </div>
 
+        {/* Formulario */}
         <form onSubmit={handleSubmit}>
           <IonList>
             {tab === "username" && (
@@ -70,6 +75,7 @@ export const LoginPage = () => {
                   value={form.username}
                   onIonChange={handleChange}
                   required
+                  disabled={initializing}
                 />
               </IonItem>
             )}
@@ -82,6 +88,7 @@ export const LoginPage = () => {
                   value={form.email}
                   onIonChange={handleChange}
                   required
+                  disabled={initializing}
                 />
               </IonItem>
             )}
@@ -93,27 +100,24 @@ export const LoginPage = () => {
                 value={form.password}
                 onIonChange={handleChange}
                 required
+                disabled={initializing}
               />
             </IonItem>
           </IonList>
 
-          <IonButton
-            expand="block"
-            type="submit"
-            disabled={loading}
-            className="mt-4"
-          >
-            {loading ? "Ingresando..." : "Iniciar sesión"}
+          <IonButton expand="block" type="submit" disabled={initializing}>
+              {initializing ? "Cargando..." : "Iniciar sesión"}
           </IonButton>
+
+            {/* Enlace a registro */}
+          <p className="ion-text-center">
+            ¿No tienes cuenta?{" "}
+            <a href="/register">Regístrate aquí</a>
+          </p>
         </form>
 
-        <div className="ion-text-center mt-4">
-          <p>
-            ¿No tienes cuenta?{" "}
-            <a onClick={() => history.push("/register")}>Regístrate aquí</a>
-          </p>
-        </div>
-      </IonContent>
     </IonPage>
   );
 };
+
+export default LoginPage;

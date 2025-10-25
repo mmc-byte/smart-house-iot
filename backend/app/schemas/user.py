@@ -1,7 +1,20 @@
 # Valida que el tipado esté bien
 
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
+
+class RoleResponse(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+class UserHouseResponse(BaseModel):
+    id: int
+    house_id: int
+    role: Optional[RoleResponse]
+    class Config:
+        orm_mode = True
 
 class UserBase(BaseModel):
     name: Optional[str] = None
@@ -11,11 +24,13 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+
 class UserResponse(UserBase):
     id: int
+    houses_link: List[UserHouseResponse] = []  # <-- nombre alineado con el modelo ORM
 
     class Config:
-        orm_mode = True # Que no lea solo tipo dict, de frente ORM
+        orm_mode = True
 
 class UserLogin(BaseModel):
     username: Optional[str] = None

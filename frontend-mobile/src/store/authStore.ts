@@ -5,7 +5,8 @@ interface AuthState {
   user: any | null;
   token: string | null;
   isAuthenticated: boolean;
-  initializing: boolean; // ya sabe si hay sesión activa?
+  initializing: boolean;
+  activeRole: string | null;
   login: (credentials: any) => Promise<void>;
   logout: () => void;
   rehydrate: () => Promise<void>;
@@ -16,107 +17,113 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: null,
   isAuthenticated: false,
   initializing: true,
+  activeRole: null,
 
-  // Auto-rehidratación: lee localStorage y valida token
   rehydrate: async () => {
+    console.log("🟥🟥rehydrate: función llamada");
+    console.log("rehydrate: iniciando...");
     const token = localStorage.getItem("token");
+
     if (!token) {
-      set({ initializing: false });
+      console.log("rehydrate: no hay token");
+      set(() => ({
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        activeRole: null,
+        initializing: false,
+      }));
       return;
     }
+
     try {
+      console.log("rehydrate: token encontrado, cargando perfil...");
       const profile = await getCurrentUser();
-      set({ token, user: profile, isAuthenticated: true, initializing: false });
-      console.log("Sesión restaurada automáticamente:", profile.username);
+
+      const role = profile?.houses_link?.[0]?.role?.name || null;
+      console.log("perfil recibido:", profile);
+
+      set(() => ({
+        token,
+        user: profile,
+        isAuthenticated: true,
+        activeRole: role,
+        initializing: false,
+      }));
+      console.log("rehydrate: terminado");
     } catch (err) {
-      console.warn("Token inválido o expirado");
+      console.error("Error al obtener perfil:", err);
+
       localStorage.removeItem("token");
-      set({ token: null, user: null, isAuthenticated: false, initializing: false });
+      set(() => ({
+        token: null,
+        user: null,
+        isAuthenticated: false,
+        activeRole: null,
+        initializing: false,
+      }));
+    } finally {
+      set((state) => ({ ...state, initializing: false }));
     }
   },
 
   login: async (credentials) => {
     const res = await (await import("../services/authService")).login(credentials);
     const profile = await getCurrentUser();
-    set({ token: res.access_token, user: profile, isAuthenticated: true });
+    const role = profile?.houses_link?.[0]?.role?.name || null;
+    set({ token: res.access_token, user: profile, isAuthenticated: true, activeRole: role });
     localStorage.setItem("token", res.access_token);
   },
 
   logout: () => {
     localStorage.removeItem("token");
-    set({ token: null, user: null, isAuthenticated: false });
+    set({ token: null, user: null, isAuthenticated: false, activeRole: null });
   },
 }));
 
-// import { create } from "zustand";
-// import { persist } from "zustand/middleware";
-// import { login, getCurrentUser } from "../services/authService";
-
 // interface AuthState {
-//   user: any;
+//   user: any | null;
 //   token: string | null;
-//   initializing: boolean; 
-//   loading: boolean;
-//   loginUser: (credentials: any) => Promise<void>;
-//   logoutUser: () => void;
+//   isAuthenticated: boolean;
+//   initializing: boolean; // ya sabe si hay sesión activa?
+//   login: (credentials: any) => Promise<void>;
+//   logout: () => void;
 //   rehydrate: () => Promise<void>;
 // }
 
-// export const useAuthStore = create<AuthState>()(
-//   persist(
-//     (set, get) => ({
-//       user: null,
-//       token: null,
-//       isAuthenticated: false,
-//       // loading: false,
-//       initializing: true,
+// export const useAuthStore = create<AuthState>((set) => ({
+//   user: null,
+//   token: null,
+//   isAuthenticated: false,
+//   initializing: true,
 
-//       loginUser: async (credentials) => {
-//         set({ loading: true });
-//         try {
-//           const data = await login(credentials);
-//           set({
-//             token: data.access_token,
-//             isAuthenticated: true,
-//           });
-//           // Obtener perfil
-//           const profile = await getCurrentUser();
-//           set({ user: profile });
-//           console.log("✅ Usuario logueado y perfil cargado:", profile);
-//         } catch (err) {
-//           console.error("❌ Error en login:", err);
-//           set({ isAuthenticated: false, token: null, user: null });
-//           throw err;
-//         } finally {
-//           set({ loading: false });
-//         }
-//       },
-
-      
-//       logoutUser: () => {
-//         console.log("Cerrando sesión");
-//         localStorage.removeItem("token");
-//         set({ user: null, token: null, isAuthenticated: false });
-//       },
-
-//       //  Verificar token persistido
-//       checkAuth: async () => {
-//         const { token } = get();
-//         if (!token) return;
-//         try {
-//           console.log("🔍 Verificando token persistido...");
-//           const profile = await getCurrentUser();
-//           set({ user: profile, isAuthenticated: true });
-//           console.log("Sesión restaurada:", profile);
-//         } catch (err) {
-//           console.warn("Token inválido o expirado");
-//           get().logoutUser();
-//         }
-//       },
-//     }),
-//     {
-//       name: "auth-storage", // nombre en localStorage
-//       partialize: (state) => ({ token: state.token, isAuthenticated: state.isAuthenticated }),
+//   // Auto-rehidratación: lee localStorage y valida token
+//   rehydrate: async () => {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       set({ initializing: false });
+//       return;
 //     }
-//   )
-// );
+//     try {
+//       const profile = await getCurrentUser();
+//       set({ token, user: profile, isAuthenticated: true, initializing: false });
+//       console.log("Sesión restaurada automáticamente:", profile.username);
+//     } catch (err) {
+//       console.warn("Token inválido o expirado");
+//       localStorage.removeItem("token");
+//       set({ token: null, user: null, isAuthenticated: false, initializing: false });
+//     }
+//   },
+
+//   login: async (credentials) => {
+//     const res = await (await import("../services/authService")).login(credentials);
+//     const profile = await getCurrentUser();
+//     set({ token: res.access_token, user: profile, isAuthenticated: true });
+//     localStorage.setItem("token", res.access_token);
+//   },
+
+//   logout: () => {
+//     localStorage.removeItem("token");
+//     set({ token: null, user: null, isAuthenticated: false });
+//   },
+// }));

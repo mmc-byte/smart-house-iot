@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.deps import get_db
 from app.models.user import User
+from app.models.user_house import UserHouse as HouseLink
+
 from app.schemas.user import UserCreate, UserLogin, UserResponse, Token
 from app.core.security import hash_password, verify_password, create_access_token
 from app.core.auth import get_current_user
+from sqlalchemy.orm import joinedload
 
 router = APIRouter()
 
@@ -55,5 +58,24 @@ def login_user(credentials: UserLogin, db: Session = Depends(get_db)):
 # --- Obtener perfil del usuario autenticado ---
 
 @router.get("/me", response_model=UserResponse)
-def read_user_me(current_user: User = Depends(get_current_user)):
-    return current_user
+def read_user_me(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = (
+        db.query(User)
+        .options(
+            joinedload(User.houses_link)
+            .joinedload(HouseLink.role)
+        )
+        .filter(User.id == current_user.id)
+        .first()
+    )
+    print("🟩🟩🟩🟥")
+    print([ (uh.id, uh.role.name if uh.role else None) for uh in user.houses_link ])
+    return user
+
+# SQLAlchemy moderno (2.0+)
+
+# Ya no acepta strings en los loader options (joinedload, selectinload, etc.).
+# Debes usar atributos de clase directamente.

@@ -13,9 +13,9 @@ export const useAuth = () => {
   } = useAuthStore();
 
   // Restaurar sesión automáticamente al montar el hook
-  useEffect(() => {
-    rehydrate();
-  }, [rehydrate]);
+  // useEffect(() => {
+  //   rehydrate();
+  // }, [rehydrate]);
 
   return {
     user,
