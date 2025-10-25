@@ -11,4 +11,5 @@ class RoomResponse(RoomBase):
     devices: List[DeviceResponse] = []
 
     class Config:
-        orm_mode = True
+        # orm_mode = True
+        form_attributes = True

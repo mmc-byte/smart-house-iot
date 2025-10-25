@@ -1,5 +1,5 @@
 # Valida que el tipado esté bien
-
+# ojo: 'orm_mode' has been renamed to 'from_attributes'
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 
@@ -7,15 +7,16 @@ class RoleResponse(BaseModel):
     name: str
 
     class Config:
-        orm_mode = True
+        # orm_mode = True
+        form_attributes = True
 
 class UserHouseResponse(BaseModel):
     id: int
     house_id: int
     role: Optional[RoleResponse]
     class Config:
-        orm_mode = True
-
+        # orm_mode = True
+        form_attributes = True
 class UserBase(BaseModel):
     name: Optional[str] = None
     username: Optional[str] = None
@@ -30,8 +31,8 @@ class UserResponse(UserBase):
     houses_link: List[UserHouseResponse] = []  # <-- nombre alineado con el modelo ORM
 
     class Config:
-        orm_mode = True
-
+        # orm_mode = True
+        form_attributes = True
 class UserLogin(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None

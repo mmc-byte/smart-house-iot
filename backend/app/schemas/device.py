@@ -16,4 +16,6 @@ class DeviceResponse(DeviceBase):
     status: Optional[dict] = None
 
     class Config:
-        orm_mode = True
+        # orm_mode = True
+       form_attributes = True
+
