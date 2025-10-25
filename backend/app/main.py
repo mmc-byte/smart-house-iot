@@ -9,18 +9,20 @@ from fastapi import FastAPI, Header, Request
 app = FastAPI(title="Smart Home Backend")
 
 FRONTEND_PORT = settings.FRONTEND_PORT
-# LAPTOP_IP=settings.LAPTOP_IP
-
-# MY_URL_LAN=f"http://{LAPTOP_IP}:{FRONTEND_PORT}"
-# origins = [MY_URL_LOCALHOST, MY_URL_LAN ]
-# mmc: 'El backend puede ser accedido desde localhost (sí mismo, o sea el cliente - el celular) o desde la laptop.'
-
 MY_URL_LOCALHOST= f"http://localhost:{FRONTEND_PORT}"
+# Version LAN : 
+# 1. Descomentar LAPTOP_IP en .env
+# 2. Descomentar la siguiente variable (cuidado con la identación):
+#LAPTOP_IP = settings.LAPTOP_IP
+# 3.Descomentar la siguiente string (cuidado con la identación):
+#MY_URL_LAN=f"http://{LAPTOP_IP}:{FRONTEND_PORT}"
+# 4. Comentar origins =[MY_URL_LOCALHOST] aquí.
 origins = [MY_URL_LOCALHOST]
-
-
-
-# OJO: no puede recibir f-strings con variables que no sean simples strings. Cómo sufrí por culpa de eso x'c
+# 5. Descomentar el siguiente arreglo 
+# origins = [
+#     MY_URL_LAN,  # para clientes dentro de la LAN
+#     MY_URL_LOCALHOST, # si pruebas desde la misma laptop
+# ]
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +38,7 @@ app.include_router(api_router, prefix="/api")
 def root():
     return {"message": "Smart Home API is running 🚀"}
 
-@app.get("/ping")
-def ping(request: Request):
-    return {"headers MUAH": dict(request.headers)}
+# Solo para debug:
+# @app.get("/ping")
+# def ping(request: Request):
+#     return {"headers": dict(request.headers)}

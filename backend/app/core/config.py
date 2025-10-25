@@ -14,14 +14,19 @@ class Settings(BaseSettings):
 
     # === otras env =====
     JWT_SECRET_KEY: str
-    JWT_ALGORITHM: str
-    # LAPTOP_IP: str
+    JWT_ALGORITHM: str  
+    
     FRONTEND_PORT: int = 5173
     BACKEND_PORT: int = 8000
     VITE_BACKEND_PORT: int = 8000
     
     # ===================
-    
+    # Version LAN : Otras env para LAN 
+    # 1. Descomentar estas variables en .env
+    # 2. También descomentarlas aquí
+    # LAPTOP_IP: str
+
+    #====================
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
