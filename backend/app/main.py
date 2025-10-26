@@ -20,8 +20,8 @@ MY_URL_LOCALHOST= f"http://localhost:{FRONTEND_PORT}"
 origins = [MY_URL_LOCALHOST]
 # 5. Descomentar el siguiente arreglo 
 # origins = [
-#     MY_URL_LAN,  # para clientes dentro de la LAN
-#     MY_URL_LOCALHOST, # si pruebas desde la misma laptop
+#     MY_URL_LAN,  # clientes dentro de la LAN
+#     MY_URL_LOCALHOST, # prueba desde la misma laptop
 # ]
 
 app.add_middleware(
