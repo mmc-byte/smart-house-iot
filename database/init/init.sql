@@ -226,10 +226,16 @@ VALUES
 	(1, 'Baño', 'Baño de la casa'),
     (1, 'Garaje', 'Garaje de la casa');
 
--- DEVICE FOR FIRST TESTING: 1 LED IN 'Dormitorio' ROOM
+-- DEVICES 
 INSERT INTO devices (room_id, name, type)
 VALUES
-    (3, 'Luz', 'led');
+    (1, 'Puerta Principal', 'servomotor'),
+	(1, 'Ventilador', 'ventilador'),
+	(2, 'Luz A', 'led'),
+	(2, 'Luz B', 'led'),
+    (3, 'Luz', 'led'),
+	(4, 'Luz', 'led'),
+	(5, 'Puerta Garaje', 'servomotor');
 
 -- SIMPLE QUERY FOR TESTING
-select * from users;
+select * from devices;
