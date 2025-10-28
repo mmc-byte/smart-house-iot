@@ -19,12 +19,16 @@ class Settings(BaseSettings):
     FRONTEND_PORT: int = 5173
     BACKEND_PORT: int = 8000
     VITE_BACKEND_PORT: int = 8000
-    
+
+    BROKER_MQTT_PORT: int =1883
+    BROKER_WS_PORT: int =9001
+
     # ===================
     # Version LAN : Otras env para LAN 
     # 1. Descomentar estas variables en .env
-    # 2. También descomentarlas aquí
+    # 2. También descomentarlas aquí (cuidado con la identacion)
     # LAPTOP_IP: str
+    # ARDUINO_IP: str
 
     #====================
     @property

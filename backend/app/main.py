@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import api_router
 from app.core.config import settings
-
 from fastapi import FastAPI, Header, Request
+
+from app.core.mqtt_client import connect_mqtt
+
+connect_mqtt() # Conexion MQTT
 
 
 app = FastAPI(title="Smart Home Backend")

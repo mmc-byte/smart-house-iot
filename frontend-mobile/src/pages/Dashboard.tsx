@@ -2,17 +2,18 @@ import React from "react";
 import { useAuthStore } from "../store/authStore";
 
 const Dashboard: React.FC = () => {
-  const { logout, activeRole } = useAuthStore();
+  const { logout, activeRole , user} = useAuthStore();
 
   return (
     <div style={{ textAlign: "center", marginTop: "40vh" }}>
-      <h1>Dashboard</h1>
-      <p>You are logged in!</p>
+      <h1>Bienvenido/a</h1>
       <button onClick={logout}>Logout</button>
       <p>
-        <strong>Active role:</strong> {activeRole ?? "null"}
+        <strong>Rol: </strong> {activeRole ?? "null"}
       </p>
-
+      <p>
+        <strong>House: </strong> {user.houses_link[0].house_id}
+      </p>
       {activeRole === null && (
         <p>No estás asignado a ningún hogar.</p>
       )}
@@ -22,13 +23,13 @@ const Dashboard: React.FC = () => {
       )}
 
       {activeRole === "family" && (
-        <button onClick={() => (window.location.href = "/control")}>Go to Control</button>
+        <button onClick={() => (window.location.href = "/control")}>Control del hogar</button>
       )}
 
       {activeRole === "owner" && (
         <>
-          <button onClick={() => (window.location.href = "/manage")}>Go to Manage</button>
-          <button onClick={() => (window.location.href = "/control")}>Go to Control</button>
+          <button onClick={() => (window.location.href = "/manage")}>Gestionar</button>
+          <button onClick={() => (window.location.href = "/control")}>Control del hogar</button>
         </>
         )
       }

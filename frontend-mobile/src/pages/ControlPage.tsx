@@ -1,82 +1,120 @@
 import React, { useEffect, useState } from "react";
-import { useAuthStore } from "../store/authStore";
+import {IonPage, IonButton, IonIcon, IonGrid, IonRow, IonCol,} from "@ionic/react";
+import { homeOutline } from "ionicons/icons";
+import { motion } from "framer-motion";
 import { getRoomsByHouse } from "../services/roomService";
 import { getDevicesByRoom } from "../services/deviceService";
+import { useAuthStore } from "../store/authStore";
+
+import  DeviceCard  from "../components/DeviceCard";
+import  AppHeader  from "../components/AppHeader"; 
 
 const ControlPage: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
+  
+  const { user } = useAuthStore();
+
+  const houseId= user.houses_link[0].house_id;
   const [rooms, setRooms] = useState<any[]>([]);
-  const [devices, setDevices] = useState<Record<number, any[]>>({});
-  const [loading, setLoading] = useState(true);
+  const [devices, setDevices] = useState<any[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<number | "global">("global");
+  const environment = "lan";
+//^^^ Cambiar a local si se quiere usar los dummy
 
+  // Simulación o fetch real
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        //  Obtiene ID de la casa del usuario (houses_link viene de profile definido en authStore usando getCurrentUser -definido en authService- que retorna propiedades entre ellas houses_link
-        const houseId = user?.houses_link?.[0]?.house_id;
-        console.log("house id : ", houseId) //imprime 1
-        if (!houseId) return;
+    const loadRoomsAndDevices = async () => {
+      if (environment === "lan") {
+          try {
+          const roomsData = await getRoomsByHouse(houseId);
+          setRooms(roomsData);
 
-        //  Get Rooms
-        const fetchedRooms = await getRoomsByHouse(houseId);
-        setRooms(fetchedRooms);
-
-        // Get devices por room
-        const devicesByRoom: Record<number, any[]> = {};
-        for (const room of fetchedRooms) {
-          const fetchedDevices = await getDevicesByRoom(room.id);
-          devicesByRoom[room.id] = fetchedDevices;
+          // Si es global, carga todos los devices
+          const allDevices = [];
+          
+          for (const room of roomsData) {
+            const roomDevices = await getDevicesByRoom(room.id);
+            allDevices.push(...roomDevices);
+          }
+          setDevices(allDevices);
+        } catch (err) {
+          console.error("Error loading rooms/devices:", err);
         }
-        setDevices(devicesByRoom);
-      } catch (err) {
-        console.error("Error cargando rooms/devices:", err);
-      } finally {
-        setLoading(false);
+      } else {
+        // Dummy local data (modo entorno 1)
+        const dummyRooms = [
+          { id: 1, name: "Sala" },
+          { id: 2, name: "Cocina" },
+          { id: 3, name: "Dormitorio" },
+        ];
+        const dummyDevices = [
+          { id: 1, name: "Luz principal", type: "led", roomId: 1 },
+          { id: 2, name: "Sensor temp", type: "sensor", roomId: 1 },
+          { id: 3, name: "Cámara", type: "camera", roomId: 3 },
+        ];
+        setRooms(dummyRooms);
+        setDevices(dummyDevices);
       }
     };
 
-    fetchData();
+    loadRoomsAndDevices();
   }, [user]);
 
-  if (loading) return <p style={{ textAlign: "center" }}>Cargando...</p>;
+  const handleRoomClick = (roomId: number | "global") => {
+    setSelectedRoom(roomId);
+  };
 
+  // Filtra devices según room
+  const filteredDevices =
+    selectedRoom === "global"
+      ? devices
+      : devices.filter((d) => d.room_id === selectedRoom);
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Panel de Control </h1>
-      {rooms.map((room) => (
-        <div key={room.id} style={{ marginBottom: "1rem" }}>
-          <h2>{room.name.toUpperCase()}</h2>
-          {devices[room.id]?.length ? (
-            <ul>
-              {devices[room.id].map((dev) => (
-                <li key={dev.id}>
-                  {dev.name} — tipo: {dev.type}
-                  <br />
-                  <small>
-                    Cmd: {dev.command_topic}
-                    <br />
-                    State: {dev.state_topic}
-                  </small>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Sin dispositivos</p>
-          )}
+    <IonPage>
+      <AppHeader />
+
+        {/* Selector de Rooms */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          <IonButton
+            fill={selectedRoom === "global" ? "solid" : "outline"}
+            onClick={() => handleRoomClick("global")}
+          >
+            <IonIcon icon={homeOutline} slot="start" />
+            Global
+          </IonButton>
+
+          {rooms.map((room) => (
+            <IonButton
+              key={room.id}
+              fill={selectedRoom === room.id ? "solid" : "outline"}
+              onClick={() => handleRoomClick(room.id)}
+            >
+              {room.name} 
+              
+            </IonButton>
+          ))}
         </div>
-      ))}
-    </div>
+
+        {/* Grid de Devices */}
+        <IonGrid>
+          <IonRow>
+            {filteredDevices.map((device) => (
+              <IonCol
+                key={device.id}
+                size="6"
+                sizeMd="4"
+                sizeLg="3"
+                className="flex justify-center"
+              >
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                  {/* version LAN - cambiar 'local' a 'lan'*/}
+                  <DeviceCard device={device} environment="lan" /> 
+                </motion.div>
+              </IonCol>
+            ))}
+          </IonRow>
+        </IonGrid>
+
+    </IonPage>
   );
 };
-
 export default ControlPage;
-
-// const ControlPage: React.FC = () => {
-//   return (
-//     <div style={{ textAlign: "center", marginTop: "40vh" }}>
-//       <h1>Control Page</h1>
-//     </div>
-//   );
-// };
-
-// export default ControlPage;

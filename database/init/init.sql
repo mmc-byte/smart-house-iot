@@ -105,6 +105,7 @@ CREATE INDEX idx_user_houses_user_id ON user_houses(user_id);
 -- =====================================================
 -- TRIGGERS
 -- =====================================================
+CREATE EXTENSION IF NOT EXISTS unaccent;
 
 -- CREATE GLOBAL ROOM WHEN ADDING A NEW HOUSE : EVERY HOUSE HAS A ROOM GLOBAL
 	-- Function
@@ -131,21 +132,35 @@ RETURNS TRIGGER AS $$
 DECLARE
     house_id INT;
     room_name TEXT;
+    device_name TEXT;
 BEGIN
     SELECT r.house_id, r.name INTO house_id, room_name
     FROM rooms r WHERE r.id = NEW.room_id;
 
+    -- Normalizamos nombres: minúsculas, sin tildes ni caracteres raros
+    room_name := lower(unaccent(room_name));  -- Quita acentos: baño → bano
+    device_name := lower(unaccent(NEW.name));
+
+    -- Reemplaza espacios por guiones bajos
+    room_name := replace(room_name, ' ', '_');
+    device_name := replace(device_name, ' ', '_');
+
+    -- Elimina caracteres no válidos para MQTT topics (solo deja [a-z0-9_])
+    room_name := regexp_replace(room_name, '[^a-z0-9_]', '_', 'g');
+    device_name := regexp_replace(device_name, '[^a-z0-9_]', '_', 'g');
+
     IF room_name = 'global' THEN
-        NEW.command_topic := format('houses/%s/%s/set', house_id, NEW.name);
-        NEW.state_topic := format('houses/%s/%s/state', house_id, NEW.name);
+        NEW.command_topic := format('houses/%s/%s/set', house_id, device_name);
+        NEW.state_topic := format('houses/%s/%s/state', house_id, device_name);
     ELSE
-        NEW.command_topic := format('houses/%s/%s/%s/set', house_id, room_name, NEW.name);
-        NEW.state_topic := format('houses/%s/%s/%s/state', house_id, room_name, NEW.name);
+        NEW.command_topic := format('houses/%s/%s/%s/set', house_id, room_name, device_name);
+        NEW.state_topic := format('houses/%s/%s/%s/state', house_id, room_name, device_name);
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Trigger
 CREATE TRIGGER trg_set_device_topics
 BEFORE INSERT ON devices
@@ -155,6 +170,8 @@ EXECUTE FUNCTION set_device_topics();
 -- =====================================================
 -- INSERT INITIAL DATA
 -- =====================================================
+ALTER TABLE devices
+ADD CONSTRAINT unique_device_name_per_room UNIQUE (room_id, name);
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -186,6 +203,33 @@ VALUES (
     1,  -- first house's id
     1   -- owner role's id in table roles
 );
+-- THE SECOND USER: FAMILY ROLE
+INSERT INTO users (name, username, email, password_hash)
+VALUES (
+    'Lily Cognito',               
+    'lily',                       -- username
+    'lily@home.com',              -- email
+    crypt('123', gen_salt('bf'))  -- hash
+);
+INSERT INTO user_houses (user_id, house_id, role_id)
+VALUES (
+    2,  -- lily's id
+    1,  -- first house's id
+    2   -- family role's id in table roles
+);
+
+-- ROOMS
+INSERT INTO rooms (house_id, name, description)
+VALUES
+    (1, 'Sala', 'Sala principal de la casa'),
+    (1, 'Dormitorio', 'Habitación principal'),
+	(1, 'Baño', 'Baño de la casa'),
+    (1, 'Garaje', 'Garaje de la casa');
+
+-- DEVICE FOR FIRST TESTING: 1 LED IN 'Dormitorio' ROOM
+INSERT INTO devices (room_id, name, type)
+VALUES
+    (3, 'Luz', 'led');
 
 -- SIMPLE QUERY FOR TESTING
-select * from houses;
+select * from users;

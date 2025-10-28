@@ -30,6 +30,7 @@ import Dashboard from "./pages/Dashboard";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 import ManagePage from "./pages/ManagePage";
+// import ControlPage from "./pages/ControlPageTest"; 
 import ControlPage from "./pages/ControlPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 

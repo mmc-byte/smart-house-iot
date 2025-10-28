@@ -20,6 +20,7 @@ export const login = async (credentials: LoginCredentials) => {
 
 export const getCurrentUser = async () => {
   const res = await api.get("/users/me");
+  // console.log('🔴Es en authService') //solo para debug
   return res.data;
 };
 

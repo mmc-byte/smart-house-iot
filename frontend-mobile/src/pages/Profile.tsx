@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
           {user?.user_houses?.length ? (
             user.user_houses.map((uh: UserHouseResponse) => (
               <p key={uh.house_id}>
-                🏠 Casa {uh.house_id} → Rol: {uh.role?.name || "sin asignar"}
+                Casa {uh.house_id} → Rol: {uh.role?.name || "sin asignar"}
               </p>
             ))
           ) : (
