@@ -3,29 +3,36 @@
 
 #include <Arduino.h>
 #include <PubSubClient.h>
+#include "config.h"
 
-// Pines de LEDs
+// ====== Pines ======
 #define LED_PIN_SALA_A 2
 #define LED_PIN_SALA_B 3
-#define LED_PIN_DORMITORIO 4
-#define LED_PIN_BANO 5
-#define FAN_PIN 6
+#define LED_PIN_COCINA 4
+#define LED_PIN_DORMITORIO 5
+#define LED_PIN_BANO 6
 
-void setupLeds() {
-  pinMode(LED_PIN_SALA_A, OUTPUT);
-  pinMode(LED_PIN_SALA_B, OUTPUT);
-  pinMode(LED_PIN_DORMITORIO, OUTPUT);
-  pinMode(LED_PIN_BANO, OUTPUT);
-  pinMode(FAN_PIN, OUTPUT);
+// ====== Funciones ======
+void setupLeds()
+{
+    pinMode(LED_PIN_SALA_A, OUTPUT);
+    pinMode(LED_PIN_SALA_B, OUTPUT);
+    pinMode(LED_PIN_COCINA, OUTPUT);
+    pinMode(LED_PIN_DORMITORIO, OUTPUT);
+    pinMode(LED_PIN_BANO, OUTPUT);
 }
 
-// Maneja el estado de un LED y publica su nuevo estado
-void handleLed(String message, int pin) {
-  if (message == "ON") {
-    digitalWrite(pin, HIGH);
-  } else {
-    digitalWrite(pin, LOW);
-  }
+// Maneja el on/off según mensaje MQTT
+void handleLed(String message, int pin, PubSubClient &client, const char *stateTopic)
+{
+    if (message == "on")
+        digitalWrite(pin, HIGH);
+    else if (message == "off")
+        digitalWrite(pin, LOW);
+
+    // Publicar estado actual
+    String state = digitalRead(pin) ? "on" : "off";
+    client.publish(stateTopic, state.c_str());
 }
 
 #endif

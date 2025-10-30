@@ -222,6 +222,7 @@ VALUES (
 INSERT INTO rooms (house_id, name, description)
 VALUES
     (1, 'Sala', 'Sala principal de la casa'),
+    (1, 'Cocina', 'Cocina de la casa'),
     (1, 'Dormitorio', 'Habitación principal'),
 	(1, 'Baño', 'Baño de la casa'),
     (1, 'Garaje', 'Garaje de la casa');
@@ -230,12 +231,13 @@ VALUES
 INSERT INTO devices (room_id, name, type)
 VALUES
     (1, 'Puerta Principal', 'servomotor'),
-	(1, 'Ventilador', 'ventilador'),
 	(2, 'Luz A', 'led'),
 	(2, 'Luz B', 'led'),
     (3, 'Luz', 'led'),
-	(4, 'Luz', 'led'),
-	(5, 'Puerta Garaje', 'servomotor');
+    (4, 'Luz', 'led'),
+	(5, 'Luz', 'led'),
+	(6, 'Puerta Garaje', 'servomotor'),
+    (6, 'Proximidad', 'sensor');
 
 -- SIMPLE QUERY FOR TESTING
 select * from devices;
