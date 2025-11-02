@@ -1,5 +1,3 @@
-# Reusables
-
 from app.core.database import SessionLocal
 from typing import Generator
 

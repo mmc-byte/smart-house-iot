@@ -3,13 +3,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import api_router
 from app.core.config import settings
 from fastapi import FastAPI, Header, Request
+from app.core.database import SessionLocal
+from app.core.mqtt_client import connect_mqtt, subscribe_to_all_states
+from contextlib import asynccontextmanager
 
-from app.core.mqtt_client import connect_mqtt
-
-connect_mqtt() # Conexion MQTT
-
-
+# connect_mqtt() # Conexion MQTT
 app = FastAPI(title="Smart Home Backend")
+
+# version LAN 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    connect_mqtt()
+    db = SessionLocal()
+    try:
+        subscribe_to_all_states(db)
+    finally:
+        db.close()
+
+    yield 
 
 FRONTEND_PORT = settings.FRONTEND_PORT
 MY_URL_LOCALHOST= f"http://localhost:{FRONTEND_PORT}"

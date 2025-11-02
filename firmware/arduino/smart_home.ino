@@ -5,8 +5,8 @@
 // ====== Librerías custom (nuestras) ======
 #include "config.h"
 #include "led.h"
-// #include "servo_door.h"
-// #include "proximity.h"
+#include "servo_door.h"
+#include "proximity.h"
 
 // ====== Objetos WiFi y MQTT ======
 WiFiClient espClient;
@@ -56,13 +56,13 @@ void callback(char *topic, byte *payload, unsigned int length)
         handleLed(message, LED_PIN_DORMITORIO, client, TOPIC_DORMITORIO_LUZ_STATE);
     else if (String(topic) == TOPIC_BANO_LUZ_SET)
         handleLed(message, LED_PIN_BANO, client, TOPIC_BANO_LUZ_STATE);
-    // else if (String(topic) == TOPIC_PUERTA_PRINCIPAL_SET)
-    //     handleServoDoor(message, SERVO_PIN_PUERTA_PRINCIPAL, client, TOPIC_PUERTA_PRINCIPAL_STATE);
-    // else if (String(topic) == TOPIC_GARAJE_PUERTA_SET)
-    //     handleServoDoor(message, SERVO_PIN_GARAJE, client, TOPIC_GARAJE_PUERTA_STATE);
+    else if (String(topic) == TOPIC_PUERTA_PRINCIPAL_SET)
+        handleServoDoor(message, SERVO_PIN_PUERTA_PRINCIPAL, client, TOPIC_PUERTA_PRINCIPAL_STATE);
+    else if (String(topic) == TOPIC_GARAJE_PUERTA_SET)
+        handleServoDoor(message, SERVO_PIN_GARAJE, client, TOPIC_GARAJE_PUERTA_STATE);
     else
     {
-        Serial.print("⚠️  Topic no reconocido: ");
+        Serial.print("¡ADVERTENCIA! Topic no reconocido: ");
         Serial.println(topic);
     }
 }
@@ -78,13 +78,13 @@ void reconnectMQTT()
             Serial.println("¡Conectado!");
 
             // Suscribirse a todos los topics "set"
-            // client.subscribe(TOPIC_PUERTA_PRINCIPAL_SET);
+            client.subscribe(TOPIC_PUERTA_PRINCIPAL_SET);
             client.subscribe(TOPIC_SALA_LUZ_A_SET);
             client.subscribe(TOPIC_SALA_LUZ_B_SET);
             client.subscribe(TOPIC_COCINA_LUZ_SET);
             client.subscribe(TOPIC_DORMITORIO_LUZ_SET);
             client.subscribe(TOPIC_BANO_LUZ_SET);
-            // client.subscribe(TOPIC_GARAJE_PUERTA_SET);
+            client.subscribe(TOPIC_GARAJE_PUERTA_SET);
 
             Serial.println("Suscripción completa a todos los topics.");
         }
@@ -110,8 +110,8 @@ void setup()
 
     // Inicializar actuadores y sensores
     setupLeds();
-    // setupServos();
-    // setupProximity();
+    setupServos();
+    setupProximity();
 }
 
 void loop()
@@ -122,5 +122,5 @@ void loop()
     client.loop();
 
     // Comprobar sensor de proximidad del garaje
-    // checkProximity(client);
+    checkProximity(client);
 }

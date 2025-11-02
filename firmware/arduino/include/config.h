@@ -23,8 +23,8 @@ IPAddress subnet(255, 255, 255, 0);
 // MQTT TOPICS
 
 // --- Global ---
-// #define TOPIC_PUERTA_PRINCIPAL_SET "houses/1/puerta_principal/set"
-// #define TOPIC_PUERTA_PRINCIPAL_STATE "houses/1/puerta_principal/state"
+#define TOPIC_PUERTA_PRINCIPAL_SET "houses/1/puerta_principal/set"
+#define TOPIC_PUERTA_PRINCIPAL_STATE "houses/1/puerta_principal/state"
 
 // --- Sala ---
 #define TOPIC_SALA_LUZ_A_SET "houses/1/sala/luz_a/set"
@@ -46,7 +46,7 @@ IPAddress subnet(255, 255, 255, 0);
 #define TOPIC_BANO_LUZ_STATE "houses/1/bano/luz/state"
 
 // --- Garaje ---
-// #define TOPIC_GARAJE_PUERTA_SET "houses/1/garaje/puerta_garaje/set"
-// #define TOPIC_GARAJE_PUERTA_STATE "houses/1/garaje/puerta_garaje/state"
+#define TOPIC_GARAJE_PUERTA_SET "houses/1/garaje/puerta_garaje/set"
+#define TOPIC_GARAJE_PUERTA_STATE "houses/1/garaje/puerta_garaje/state"
 
 #endif
