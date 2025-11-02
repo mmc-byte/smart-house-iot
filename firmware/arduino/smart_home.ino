@@ -56,6 +56,9 @@ void callback(char *topic, byte *payload, unsigned int length)
         handleLed(message, LED_PIN_DORMITORIO, client, TOPIC_DORMITORIO_LUZ_STATE);
     else if (String(topic) == TOPIC_BANO_LUZ_SET)
         handleLed(message, LED_PIN_BANO, client, TOPIC_BANO_LUZ_STATE);
+    else if (String(topic) == TOPIC_GARAJE_LUZ_SET)
+        handleLed(message, LED_PIN_GARAJE, client, TOPIC_GARAJE_LUZ_STATE);
+
     else if (String(topic) == TOPIC_PUERTA_PRINCIPAL_SET)
         handleServoDoor(message, SERVO_PIN_PUERTA_PRINCIPAL, client, TOPIC_PUERTA_PRINCIPAL_STATE);
     else if (String(topic) == TOPIC_GARAJE_PUERTA_SET)
@@ -84,6 +87,7 @@ void reconnectMQTT()
             client.subscribe(TOPIC_COCINA_LUZ_SET);
             client.subscribe(TOPIC_DORMITORIO_LUZ_SET);
             client.subscribe(TOPIC_BANO_LUZ_SET);
+            client.subscribe(TOPIC_GARAJE_LUZ_SET);
             client.subscribe(TOPIC_GARAJE_PUERTA_SET);
 
             Serial.println("Suscripción completa a todos los topics.");

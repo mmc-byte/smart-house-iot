@@ -236,6 +236,7 @@ VALUES
     (3, 'Luz', 'led'),
     (4, 'Luz', 'led'),
 	(5, 'Luz', 'led'),
+	(6, 'Luz', 'led'),
 	(6, 'Puerta Garaje', 'servomotor'),
     (6, 'Proximidad', 'sensor');
 

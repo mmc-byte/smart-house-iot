@@ -11,6 +11,7 @@
 #define LED_PIN_COCINA 51
 #define LED_PIN_DORMITORIO 49
 #define LED_PIN_BANO 47
+#define LED_PIN_GARAJE 53
 
 // ====== Funciones ======
 void setupLeds()
@@ -20,6 +21,7 @@ void setupLeds()
     pinMode(LED_PIN_COCINA, OUTPUT);
     pinMode(LED_PIN_DORMITORIO, OUTPUT);
     pinMode(LED_PIN_BANO, OUTPUT);
+    pinMode(LED_PIN_GARAJE, OUTPUT);
 }
 
 // Maneja el on/off según mensaje MQTT

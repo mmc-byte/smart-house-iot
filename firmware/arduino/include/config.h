@@ -46,6 +46,9 @@ IPAddress subnet(255, 255, 255, 0);
 #define TOPIC_BANO_LUZ_STATE "houses/1/bano/luz/state"
 
 // --- Garaje ---
+#define TOPIC_GARAJE_LUZ_SET "houses/1/garaje/luz/set"
+#define TOPIC_GARAJE_LUZ_STATE "houses/1/garaje/luz/state"
+
 #define TOPIC_GARAJE_PUERTA_SET "houses/1/garaje/puerta_garaje/set"
 #define TOPIC_GARAJE_PUERTA_STATE "houses/1/garaje/puerta_garaje/state"
 
