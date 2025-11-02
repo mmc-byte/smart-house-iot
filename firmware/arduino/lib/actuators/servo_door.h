@@ -7,10 +7,10 @@
 #include "config.h"
 
 // ====== Pines ======
-#define SERVO_PIN_PUERTA_PRINCIPAL 7
-#define SERVO_PIN_PUERTA_GARAJE 8
-#define LED_VERDE_PIN 9
-#define LED_ROJO_PIN 10
+#define SERVO_PIN_PUERTA_PRINCIPAL 50
+#define SERVO_PIN_PUERTA_GARAJE 52
+#define LED_VERDE_PIN 41
+#define LED_ROJO_PIN 39
 
 // ====== Objetos Servo ======
 Servo servoPrincipal;

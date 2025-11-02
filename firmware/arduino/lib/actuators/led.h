@@ -6,11 +6,11 @@
 #include "config.h"
 
 // ====== Pines ======
-#define LED_PIN_SALA_A 2
-#define LED_PIN_SALA_B 3
-#define LED_PIN_COCINA 4
-#define LED_PIN_DORMITORIO 5
-#define LED_PIN_BANO 6
+#define LED_PIN_SALA_A 45
+#define LED_PIN_SALA_B 43
+#define LED_PIN_COCINA 51
+#define LED_PIN_DORMITORIO 49
+#define LED_PIN_BANO 47
 
 // ====== Funciones ======
 void setupLeds()

@@ -24,11 +24,9 @@ class Settings(BaseSettings):
     BROKER_WS_PORT: int =9001
 
     # ===================
-    # Version LAN : Otras env para LAN 
-    # 1. Descomentar estas variables en .env
-    # 2. También descomentarlas aquí (cuidado con la identacion)
-    # LAPTOP_IP: str
-    # ARDUINO_IP: str
+    # Para version LOCAL: Comentar:
+    LAPTOP_IP: str
+    ARDUINO_IP: str
 
     #====================
     @property

@@ -6,8 +6,8 @@
 #include "servo_door.h"
 
 // ====== Pines ======
-#define TRIG_PIN 11
-#define ECHO_PIN 12
+#define TRIG_PIN 48
+#define ECHO_PIN 46
 
 // ====== Variables internas ======
 bool lastCerca = false;  // Último estado detectado
