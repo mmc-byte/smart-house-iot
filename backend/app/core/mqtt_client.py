@@ -2,10 +2,16 @@ import json, time
 import paho.mqtt.client as mqtt
 from app.core.config import settings
 from app.models.device import Device
-#version LAN
-BROKER_HOST = "10.4.4.2"
-#version LOCAL
-# BROKER_HOST = "localhost" 
+
+#Version LAN ========================= 
+# BROKER_HOST = "10.4.4.2"
+# ====================================  
+
+
+#Version LOCAL ========================
+BROKER_HOST = "localhost" 
+# ====================================  
+
 
 BROKER_PORT = settings.BROKER_MQTT_PORT
 

@@ -1,8 +1,14 @@
+import {IonPage, IonContent,} from "@ionic/react";
+import React, { useEffect } from "react";
+
 const ManagePage: React.FC = () => {
+  
   return (
-    <div style={{ textAlign: "center", marginTop: "40vh" }}>
-      <h1>Manage Page</h1>
-    </div>
+    <IonPage>
+      <IonContent className="ion-padding ion-text-center">
+      <h1>En proceso</h1>
+    </IonContent>
+    </IonPage>
   );
 };
 

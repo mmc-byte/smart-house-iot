@@ -23,12 +23,10 @@ class Settings(BaseSettings):
     BROKER_MQTT_PORT: int =1883
     BROKER_WS_PORT: int =9001
 
-    # ===================
-    # Para version LOCAL: Comentar:
     LAPTOP_IP: str
     ARDUINO_IP: str
+    VITE_LAPTOP_IP: str
 
-    #====================
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

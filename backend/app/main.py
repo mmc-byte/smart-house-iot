@@ -8,7 +8,7 @@ from app.core.mqtt_client import connect_mqtt, subscribe_to_all_states
 from contextlib import asynccontextmanager
 
 app = FastAPI(title="Smart Home Backend")
-
+# connect_mqtt()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     connect_mqtt()
@@ -23,17 +23,18 @@ async def lifespan(app: FastAPI):
 FRONTEND_PORT = settings.FRONTEND_PORT
 MY_URL_LOCALHOST= f"http://localhost:{FRONTEND_PORT}"
 
-#Version LOCAL
-# origins = [MY_URL_LOCALHOST]
+#Version LOCAL ========================
+origins = [MY_URL_LOCALHOST]
+# ====================================  
 
-
-# Version LAN : 
-LAPTOP_IP = settings.LAPTOP_IP
-MY_URL_LAN=f"http://{LAPTOP_IP}:{FRONTEND_PORT}"
-origins = [
-    MY_URL_LAN,  # clientes dentro de la LAN
-    MY_URL_LOCALHOST, # prueba desde la misma laptop
-]
+# Version LAN ========================
+# LAPTOP_IP = settings.LAPTOP_IP
+# MY_URL_LAN=f"http://{LAPTOP_IP}:{FRONTEND_PORT}"
+# origins = [
+#     MY_URL_LAN,  # clientes dentro de la LAN
+#     MY_URL_LOCALHOST, # prueba desde la misma laptop
+# ]
+# ====================================  
 
 app.add_middleware(
     CORSMiddleware,

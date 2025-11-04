@@ -1,30 +1,101 @@
 import React from "react";
-import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonIcon } from "@ionic/react";
-import { personCircleOutline, menuOutline } from "ionicons/icons";
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonButton,
+  IonTitle,
+  IonIcon,
+} from "@ionic/react";
+import { menuOutline, personCircleOutline, arrowBackOutline } from "ionicons/icons";
+import { useHistory } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import { useHistory } from "react-router";
 
-const AppHeader: React.FC = () => {
+interface AppHeaderProps {
+  title?: string;            // Título dinámico
+  showMenu?: boolean;        // Mostrar botón de menú
+  showProfile?: boolean;     // Mostrar botón de perfil
+  showBackButton?: boolean;  // Mostrar botón de volver
+  onMenuClick?: () => void;  // Acción al presionar menú
+}
+
+const AppHeader: React.FC<AppHeaderProps> = ({
+  title = "",
+  showMenu = false,
+  showProfile = true,
+  showBackButton = false,
+  onMenuClick,
+}) => {
   const { user } = useAuthStore();
   const history = useHistory();
 
   return (
     <IonHeader>
       <IonToolbar>
+
+        {/* Botón de menú o volver */}
         <IonButtons slot="start">
-          <IonButton>
-            <IonIcon icon={menuOutline} />
-          </IonButton>
+          {showBackButton ? (
+            <IonButton onClick={() => history.goBack()}>
+              <IonIcon icon={arrowBackOutline} />
+            </IonButton>
+          ) : (
+            showMenu && (
+              <IonButton onClick={onMenuClick}>
+                <IonIcon icon={menuOutline} />
+              </IonButton>
+            )
+          )}
         </IonButtons>
-        <IonTitle>Hola {user?.username || "usuario"}!</IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={() => history.push("/profile")}>
-            <IonIcon icon={personCircleOutline} />
-          </IonButton>
-        </IonButtons>
+
+        {/* Título dinámico */}
+        <IonTitle>
+          {title || `Hola ${user?.username || "usuario"}!`}
+        </IonTitle>
+
+        {/* Botón de perfil */}
+        {showProfile && (
+          <IonButtons slot="end">
+            <IonButton onClick={() => history.push("/profile")}>
+              <IonIcon icon={personCircleOutline} />
+            </IonButton>
+          </IonButtons>
+        )}
       </IonToolbar>
     </IonHeader>
   );
 };
 
 export default AppHeader;
+
+// import React from "react";
+// import { IonHeader, IonToolbar, IonButtons, IonButton, IonTitle, IonIcon } from "@ionic/react";
+// import { personCircleOutline, menuOutline } from "ionicons/icons";
+// import { useAuthStore } from "../store/authStore";
+// import { useHistory } from "react-router";
+
+// const AppHeader: React.FC = () => {
+//   const { user } = useAuthStore();
+//   const history = useHistory();
+
+//   return (
+//     <IonHeader>
+//       <IonToolbar>
+//         <IonButtons slot="start">
+//           <IonButton>
+//             <IonIcon icon={menuOutline} />
+//           </IonButton>
+//         </IonButtons>
+//         <IonTitle>Hola {user?.username || "usuario"}!</IonTitle>
+//         <IonButtons slot="end">
+//           <IonButton onClick={() => history.push("/profile")}>
+//             <IonIcon icon={personCircleOutline} />
+//           </IonButton>
+//         </IonButtons>
+//       </IonToolbar>
+//     </IonHeader>
+//   );
+// };
+
+// export default AppHeader;
+

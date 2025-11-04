@@ -12,7 +12,7 @@ export const login = async (credentials: LoginCredentials) => {
   const res = await api.post("/users/login", credentials, {
     headers: { "Content-Type": "application/json" },
   });
-
+  console.log(credentials);
   localStorage.setItem("token", res.data.access_token);  // Estado persistente !
   return res.data;
 };

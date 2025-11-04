@@ -9,7 +9,6 @@ import * as path from "path";
 import dotenv from "dotenv";
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 console.log("VITE_BACKEND_PORT desde .env raíz:", process.env.VITE_BACKEND_PORT);
-// Version LOCAL : Comentar las siguientes constantes
 console.log("VITE_LAPTOP_IP desde .env raíz:", process.env.VITE_LAPTOP_IP);
 
 //-------------------------------------------------------------------------
@@ -23,7 +22,6 @@ export default defineConfig({
   // -- Para variables de entorno
   define: {
     "import.meta.env.VITE_BACKEND_PORT": JSON.stringify(process.env.VITE_BACKEND_PORT),
-    // Version LOCAL : Comentar las siguientes variables
     "import.meta.env.VITE_LAPTOP_IP": JSON.stringify(process.env.VITE_LAPTOP_IP),
 
   },

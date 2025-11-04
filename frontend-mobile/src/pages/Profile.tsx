@@ -16,18 +16,18 @@ interface UserHouseResponse {
 const Profile: React.FC = () => {
   const { user } = useAuthStore();
   const history = useHistory();
-
+console.log('House ID:', user.houses_link[0]?.house_id);
   return (
     <IonPage>
-      <AppHeader />
+      <AppHeader showBackButton/>
       <IonContent className="ion-padding">
         <IonText>
           <h2>Perfil del usuario</h2>
           <p><strong>Usuario:</strong> {user?.username}</p>
           <p><strong>Email:</strong> {user?.email}</p>
           <h3>Casas y roles:</h3>
-          {user?.user_houses?.length ? (
-            user.user_houses.map((uh: UserHouseResponse) => (
+          {user?.houses_link?.length ? (
+            user.houses_link.map((uh: UserHouseResponse) => (
               <p key={uh.house_id}>
                 Casa {uh.house_id} → Rol: {uh.role?.name || "sin asignar"}
               </p>

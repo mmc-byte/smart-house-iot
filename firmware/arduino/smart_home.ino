@@ -106,7 +106,7 @@ void reconnectMQTT()
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(115200); //<- aquí, preguntar.
     setupWiFi();
 
     client.setServer(MQTT_BROKER, MQTT_PORT);

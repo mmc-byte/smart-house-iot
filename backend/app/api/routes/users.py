@@ -37,7 +37,8 @@ def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
 # Login : username o email
 @router.post("/login", response_model=Token)
 def login_user(credentials: UserLogin, db: Session = Depends(get_db)):
-
+    print("routes/users.py dice:")
+    print(credentials)
     if not credentials.username and not credentials.email:
         raise HTTPException(status_code=400, detail="Username or email required")
 

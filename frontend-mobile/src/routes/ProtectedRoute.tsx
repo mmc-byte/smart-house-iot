@@ -6,7 +6,7 @@ interface ProtectedRouteProps {
   component: React.ComponentType<any>;
   path: string;
   exact?: boolean;
-  allowedRoles?: string[]; // ← roles permitidos
+  allowedRoles?: string[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -20,22 +20,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     <Route
       {...rest}
       render={(props) => {
-        //  Si no hay token → fuera
-        if (!isAuthenticated) {
-          return <Redirect to="/" />;
-        }
+        //  No autenticado → inicio
+        if (!isAuthenticated) return <Redirect to="/" />;
 
-        // Si hay token pero sin rol → bloqueado
-        if (!activeRole) {
-          return <Redirect to="/dashboard" />;
-        }
+        // Sin rol activo → dashboard
+        if (!activeRole) return <Redirect to="/dashboard" />;
 
-        // Si tiene rol permitido → pasa
+        //  Rol permitido → renderizar componente
         if (!allowedRoles || allowedRoles.includes(activeRole)) {
           return <Component {...props} />;
         }
 
-        // Si tiene rol pero no permitido
+        //  Rol no permitido → dashboard
         return <Redirect to="/dashboard" />;
       }}
     />
@@ -43,4 +39,3 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 };
 
 export default ProtectedRoute;
-
