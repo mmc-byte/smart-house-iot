@@ -7,37 +7,46 @@ import {
   IonToolbar,
   IonButton,
   IonText,
+  IonImg,
 } from "@ionic/react";
+import "./welcome.css";
 
 const Welcome: React.FC = () => {
   return (
     <IonPage>
-      <IonContent
-        fullscreen
-        className="ion-padding ion-text-center"
-      >
-        <IonText color="primary">
-          <h1>Bienvenido</h1>
-        </IonText>
+      <IonContent fullscreen className="ion-text-center">
+        <div className="above">
+          <div className="top-section">
+            <IonImg src="/assets/welcome-image.svg" alt="Welcome" />
+          </div>
+          <div className="curve"></div>
+        </div>
+        <div className="bottom-section">
+          <IonText className="welcome-text" color="primary">
+            <h1>Aura Cognito</h1>
+          </IonText>
+          <IonText className="welcome-text" color="medium">
+            <h2>El pulso de tu hogar</h2>
+          </IonText>
 
-        {/* <p>Please log in to continue.</p> */}
+          <div style={{ marginTop: "2rem" }}>
+            <IonButton
+              color="primary"
+              expand="block"
+              onClick={() => (window.location.href = "/login")}
+            >
+              Iniciar Sesión
+            </IonButton>
 
-        <div style={{ marginTop: "2rem" }}>
-          <IonButton
-            expand="block"
-            onClick={() => (window.location.href = "/login")}
-          >
-            Iniciar Sesión
-          </IonButton>
-
-          <IonButton
-            expand="block"
-            fill="outline"
-            color="medium"
-            onClick={() => (window.location.href = "/register")}
-          >
-            Regístrate
-          </IonButton>
+            <IonButton
+              expand="block"
+              fill="outline"
+              color="secondary"
+              onClick={() => (window.location.href = "/register")}
+            >
+              Regístrate
+            </IonButton>
+          </div>
         </div>
       </IonContent>
     </IonPage>
@@ -45,33 +54,3 @@ const Welcome: React.FC = () => {
 };
 
 export default Welcome;
-
-// import React from "react";
-// import {
-//   IonPage,
-//   IonContent,
-//   IonHeader,
-//   IonTitle,
-//   IonToolbar,
-//   IonButton,
-//   IonText,
-// } from "@ionic/react";
-
-// const Welcome: React.FC = () => {
-//   return (
-//     <IonPage>
-//       <IonContent>
-//         <h1>Welcome Page</h1>
-//         <p>Please log in to continue.</p>
-//         <button onClick={() => (window.location.href = "/login")}>
-//           Iniciar Sesión
-//         </button>
-//         <button onClick={() => (window.location.href = "/register")}>
-//           Regístrate
-//         </button>
-//       </IonContent>
-//     </IonPage>
-//   );
-// };
-
-// export default Welcome;

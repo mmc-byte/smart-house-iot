@@ -9,6 +9,7 @@ import {
   IonLabel,
   IonInput,
   IonButton,
+  IonText
 } from "@ionic/react";
 import type { InputCustomEvent, InputInputEventDetail } from "@ionic/react";
 
@@ -54,7 +55,10 @@ const LoginPage = () => {
   return (
     <IonPage>
       <IonContent fullscreen className="ion-padding ion-text-center">
-        <h2>Iniciar sesión</h2>
+       <IonText color="primary">
+        <h2 >Iniciar sesión</h2>
+       </IonText>
+        
 
         <div className="flex justify-center gap-3 mb-4">
           <IonButton
@@ -65,7 +69,7 @@ const LoginPage = () => {
           >
             Usuario
           </IonButton>
-          <IonButton
+          <IonButton color="secondary"
             fill={tab === "email" ? "solid" : "outline"}
             onClick={() => {
               setTab("email");

@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
 console.log('House ID:', user.houses_link[0]?.house_id);
   return (
     <IonPage>
-      <AppHeader showBackButton/>
+      <AppHeader  showBackButton />
       <IonContent className="ion-padding">
         <IonText>
           <h2>Perfil del usuario</h2>

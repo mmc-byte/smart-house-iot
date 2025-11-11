@@ -1,2 +1,50 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+/* Ir a los docs de Ionic= http://ionicframework.com/docs/theming/ */
+
+/*== TEMA CLARO =============================================*/
+:root {
+    --ion-color-primary: #6f9eb4;
+    --ion-gradient-primary: linear-gradient(135deg, #afddf2, #cab6df);
+    --ion-color-primary-rgb: 111, 158, 180;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #5c8192;
+    --ion-color-primary-tint: #7daabe;
+
+    --ion-color-secondary: #a28abb;
+    --ion-color-secondary-rgb: 111, 158, 180;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #5c8192;
+    --ion-color-secondary-tint: #7daabe;
+
+    /** fondos **/
+    --ion-background-color: #fff;
+}
+
+/*Nota: Podemos definir colores nuevos*/
+/*== TEMA OSCURO ========================================*/
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ion-color-primary: #70a0b7;
+        --ion-gradient-primary: linear-gradient(135deg, #70a3bb, #ccb9dd);
+        --ion-color-primary-rgb: 0, 184, 148;
+        --ion-color-primary-contrast: #ffffff;
+        --ion-color-primary-contrast-rgb: 255, 255, 255;
+        --ion-color-primary-shade: #70a3bb;
+        --ion-color-primary-tint: #70a3bb;
+
+    }
+}
+
+/*== OTROS ==============================================*/
+/* Retira la sombra debajo del header*/
+.header-md::after {
+    background: none !important;
+}
+
+.header-md {
+    box-shadow: none !important;
+}
+
+/*=======================================================*/

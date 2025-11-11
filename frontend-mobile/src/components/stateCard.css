@@ -1,0 +1,42 @@
+.state-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--ion-gradient-primary);
+}
+.temperature, .rooms-lit{
+  display: flex;
+  gap:.8rem;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.state-card-content {
+  display: flex;
+  gap: 20px; 
+  justify-content: center;
+}
+.circle-title{
+    color: rgb(39, 39, 39)
+}
+.state-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  color: rgb(94, 94, 94)
+}
+
+.temperature-circle, .rooms-lit-circle {
+  background-color: rgb(242, 242, 242, 0.9) ;
+}
+
+
+.circle-label {
+  text-align: center;
+}
