@@ -28,3 +28,5 @@ def create_room(room_in: RoomBase, house_id: int, db: Session = Depends(get_db))
     db.commit()
     db.refresh(new_room)
     return new_room
+
+    ### mmc: Tal vez añadir passive deletes si se agrega un endpoint para borrar

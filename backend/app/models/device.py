@@ -27,3 +27,4 @@ class Device(Base):
             "command": self.command_topic,
             "state": self.state_topic,
         }
+   ### mmc: Tal vez añadir passive deletes si se agrega un endpoint para borrar

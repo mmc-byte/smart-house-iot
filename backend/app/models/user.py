@@ -12,4 +12,5 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     created_at = Column(TIMESTAMP, server_default=text("NOW()"))
 
+    # Relaciones
     houses_link = relationship("UserHouse", back_populates="user")
