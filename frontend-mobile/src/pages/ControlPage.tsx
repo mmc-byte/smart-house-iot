@@ -19,6 +19,7 @@ interface Device {
   name: string;
   type: string;
   room_id: number;
+
 }
 
 const ControlPage: React.FC = () => {
@@ -46,6 +47,7 @@ const ControlPage: React.FC = () => {
             allDevices.push(...roomDevices);
           }
           setDevices(allDevices);
+
         } catch (err) {
           console.error("Error loading rooms/devices:", err);
         }

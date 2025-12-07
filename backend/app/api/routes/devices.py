@@ -9,12 +9,6 @@ from typing import List
 router = APIRouter()
 
 # Obtener todos los dispositivos de un room
-# @router.get("/room/{room_id}", response_model=List[DeviceResponse])
-# def get_devices_by_room(room_id: int, db: Session = Depends(get_db)):
-#     devices = db.query(Device).filter(Device.room_id == room_id).all()
-#     if not devices:
-#         raise HTTPException(status_code=404, detail="No devices found for this room")
-#     return devices
 @router.get("/room/{room_id}")
 def get_devices_by_room(room_id: int, db: Session = Depends(get_db)):
     devices = db.query(Device).filter(Device.room_id == room_id).all()

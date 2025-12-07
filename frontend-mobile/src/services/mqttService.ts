@@ -1,6 +1,9 @@
 import { api } from "./api";
 
-export const sendDeviceCommand = async (deviceId: number, action: "on" | "off") => {
+export const sendDeviceCommand = async (
+  deviceId: number,
+  action: "on" | "off" | "open" | "close"
+) => {
   const res = await api.post(`mqtt/devices/${deviceId}/command?action=${action}`);
   return res.data;
 };

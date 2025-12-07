@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     ARDUINO_IP: str
     VITE_LAPTOP_IP: str
 
+    OPENROUTER_API_KEY:str
+
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

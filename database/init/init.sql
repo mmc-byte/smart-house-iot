@@ -71,15 +71,18 @@ CREATE TABLE rooms (
     description TEXT
 );
 
--- 6. DEVICES (sensores, servos, etc.)
+-- 6. DEVICES (sensores, actuadores, etc.)
 CREATE TABLE devices (
     id SERIAL PRIMARY KEY,
     room_id INT REFERENCES rooms(id) ON DELETE SET NULL,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(50),                             -- ej. sensor, servo, led, etc.
-    state_topic VARCHAR(150),                     -- MQTT topic (lectura)
-    command_topic VARCHAR(150),                   -- MQTT topic (comandos)
-    status JSONB,                                 -- último payload
+    type VARCHAR(50), -- físico (ej. led, servo, sensor)    
+    category VARCHAR(50), -- semantica para IA (light, door, sensor, switch, etc.)
+    aliases TEXT[], -- alias para NLP
+    capabilities JSONB, -- para tool calling 
+    state_topic VARCHAR(150), -- MQTT
+    command_topic VARCHAR(150), -- MQTT
+    status JSONB, -- ultimo payload del broker
     last_update TIMESTAMP DEFAULT NOW()
 );
 
@@ -228,17 +231,85 @@ VALUES
     (1, 'Garaje', 'Garaje de la casa');
 
 -- DEVICES 
-INSERT INTO devices (room_id, name, type)
+INSERT INTO devices (room_id, name, type, category, aliases, capabilities)
 VALUES
-    (1, 'Puerta Principal', 'servomotor'),
-	(2, 'Luz A', 'led'),
-	(2, 'Luz B', 'led'),
-    (3, 'Luz', 'led'),
-    (4, 'Luz', 'led'),
-	(5, 'Luz', 'led'),
-	(6, 'Luz', 'led'),
-	(6, 'Puerta Garaje', 'servomotor'),
-    (6, 'Proximidad', 'sensor');
+    ---------------------------------------------------------------------
+    -- ROOM 1 — GLOBAL
+    ---------------------------------------------------------------------
+    (1, 'Puerta Principal', 'servomotor', 'door',
+        ARRAY['puerta principal', 'entrada', 'puerta de entrada'],
+        '{"actions": ["open", "close"]}'::jsonb
+    ),
+
+    (1, 'Sensor Proximidad Global', 'sensor', 'sensor',
+        ARRAY['sensor proximidad global', 'sensor de distancia global', 'proximidad global'],
+        '{"actions": []}'::jsonb
+    ),
+
+    (1, 'Ventilador Central', 'fan', 'fan',
+        ARRAY['ventilador', 'ventilador central', 'ventilador general'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    (1, 'Sensor Temperatura Global', 'sensor', 'sensor',
+        ARRAY['sensor temperatura', 'sensor de temperatura', 'temperatura global'],
+        '{"actions": []}'::jsonb
+    ),
+
+    ---------------------------------------------------------------------
+    -- ROOM 2 — SALA COMEDOR
+    ---------------------------------------------------------------------
+    (2, 'Luz Sala A', 'led', 'light',
+        ARRAY['luz sala a', 'lámpara sala a', 'foco sala a', 'luz sala comedor a'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    (2, 'Luz Sala B', 'led', 'light',
+        ARRAY['luz sala b', 'lámpara sala b', 'foco sala b', 'luz sala comedor b'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    ---------------------------------------------------------------------
+    -- ROOM 3 — COCINA
+    ---------------------------------------------------------------------
+    (3, 'Luz Cocina', 'led', 'light',
+        ARRAY['luz cocina', 'lámpara cocina', 'foco cocina'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    ---------------------------------------------------------------------
+    -- ROOM 4 — DORMITORIO
+    ---------------------------------------------------------------------
+    (4, 'Luz Dormitorio', 'led', 'light',
+        ARRAY['luz dormitorio', 'lámpara dormitorio', 'luz del cuarto', 'foco dormitorio'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    ---------------------------------------------------------------------
+    -- ROOM 5 — BAÑO
+    ---------------------------------------------------------------------
+    (5, 'Luz Baño', 'led', 'light',
+        ARRAY['luz baño', 'luz del baño', 'lámpara baño'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    ---------------------------------------------------------------------
+    -- ROOM 6 — GARAJE
+    ---------------------------------------------------------------------
+    (6, 'Luz Garaje', 'led', 'light',
+        ARRAY['luz garaje', 'foco garaje', 'lámpara garaje'],
+        '{"actions": ["on", "off"]}'::jsonb
+    ),
+
+    (6, 'Puerta Garaje', 'servomotor', 'door',
+        ARRAY['puerta garaje', 'puerta del garaje', 'garaje'],
+        '{"actions": ["open", "close"]}'::jsonb
+    ),
+
+    (6, 'Sensor Proximidad Garaje', 'sensor', 'sensor',
+        ARRAY['sensor proximidad garaje', 'sensor distancia garaje', 'proximidad garaje'],
+        '{"actions": []}'::jsonb
+    );
 
 -- SIMPLE QUERY FOR TESTING
 select * from devices;

@@ -14,7 +14,6 @@ def send_device_command(device_id: int, action: str, db: Session = Depends(get_d
     device = db.query(Device).filter(Device.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
-
     topic = device.command_topic # El topic generado en la DB con el registro de un device
     payload = {"action": action}
 

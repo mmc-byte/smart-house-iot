@@ -1,9 +1,12 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class DeviceBase(BaseModel):
     name: str
     type: Optional[str] = None
+    category: Optional[str] = None
+    aliases: Optional[List[str]] = None
+    capabilities: Optional[dict] = None
 
 class DeviceCreate(DeviceBase):
     room_id: int
@@ -16,6 +19,6 @@ class DeviceResponse(DeviceBase):
     status: Optional[dict] = None
 
     class Config:
-        # orm_mode = True
-       form_attributes = True
+        orm_mode = True
+        form_attributes = True
 

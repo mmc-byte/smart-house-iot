@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON, TIMESTAMP, text
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, TIMESTAMP, text, ARRAY
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -13,6 +13,9 @@ class Device(Base):
     command_topic = Column(String(150))
     status = Column(JSON)
     last_update = Column(TIMESTAMP, server_default=text("NOW()"))
+    aliases = Column(ARRAY(String))
+    category = Column(String(50))
+    capabilities = Column(JSON)
 
     # Relaciones
     room = relationship("Room", back_populates="devices")

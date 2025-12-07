@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { IonToggle, IonSpinner } from "@ionic/react";
 import { motion } from "framer-motion";
-import { Lightbulb, Thermometer, Camera, DoorClosed } from "lucide-react";
+import { Lightbulb, Thermometer, Camera, DoorClosed, Fan } from "lucide-react";
 import { getDeviceState, sendDeviceCommand } from "../services/mqttService";
 
 interface DeviceCardProps {
@@ -43,7 +43,14 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
 
   // Maneja el cambio manual del toggle (on/off)
   const handleToggle = async (e: CustomEvent) => {
-    const newState = e.detail.checked ? "on" : "off";
+    let newState: "on" | "off" | "open" | "close" = "off";
+
+    if (device.type === "servomotor") {
+      newState = e.detail.checked ? "open" : "close";
+    } else {
+      newState = e.detail.checked ? "on" : "off";
+    }
+
     setLoading(true);
 
     try {
@@ -75,6 +82,13 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
         return <DoorClosed size={32} className="text-blue-400" />;
       case "camera":
         return <Camera size={32} className="text-indigo-400" />;
+      case "fan":
+      return (
+        <Fan
+          size={32}
+          className={state === "on" ? "text-green-500" : "text-gray-400"}
+        />
+      );
       default:
         return <Lightbulb size={32} className="text-gray-400" />;
     }
